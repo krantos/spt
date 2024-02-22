@@ -23,7 +23,7 @@ export default function () {
 	};
 
   const res = http.get(
-    `${__ENV.URL}/api/v3/pet/findByTags?tags=tag1`, params
+    `${__ENV.URL}/api/v3/pet/findByTags?tags=tag1&tags=tag2&tags=tag3`, params
   );
 
   sleep(1);
