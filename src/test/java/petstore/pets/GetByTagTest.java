@@ -17,7 +17,6 @@ import java.util.Arrays;
 
 @ExtendWith(SerenityJUnit5Extension.class)
 public class GetByTagTest extends Base {
-
   @BeforeEach
   public void setup() {
     super.setup();

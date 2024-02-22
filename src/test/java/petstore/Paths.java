@@ -1,7 +1,6 @@
 package petstore;
 
 public class Paths {
-
   public static String Pet = "/pet";
   public static String FindByStatus = Pet + "/findByStatus";
   public static String FindByTags = Pet + "/findByTags";
