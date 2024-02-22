@@ -96,16 +96,33 @@
                         <scanTarget>inflector.yaml</scanTarget>
                         <scanTarget>src/main/resources/openapi-inflector.yaml</scanTarget>
                     </scanTargets>
-                    <scanIntervalSeconds>1</scanIntervalSeconds>
+<!--                    <scanIntervalSeconds>1</scanIntervalSeconds>-->
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
-                    <webAppSourceDirectory>target/${project.artifactId}-${project.version}</webAppSourceDirectory>
+<!--                    <webAppSourceDirectory>target/${project.artifactId}-${project.version}</webAppSourceDirectory>-->
                     <httpConnector>
                         <port>8080</port>
-                        <idleTimeout>60000</idleTimeout>
                     </httpConnector>
+                    <stopKey>quit</stopKey>
+                    <stopPort>9000</stopPort>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-jetty</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
@@ -170,6 +187,9 @@
                         <include>**/*TestSuite.java</include>
                         <include>**/When*.java</include>
                     </includes>
+<!--                    <classpathDependencyExcludes>-->
+<!--                        <classpathDependencyScopeExclude>runtime</classpathDependencyScopeExclude>-->
+<!--                    </classpathDependencyExcludes>-->
                     <systemPropertyVariables>
                         <restapi.baseurl>${restapi.baseurl}</restapi.baseurl>
                         <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
@@ -214,7 +234,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <restapi.baseurl>http://localhost:8080/api/v3/</restapi.baseurl>
+                <restapi.baseurl>http://127.0.0.1:8080/api/v3/</restapi.baseurl>
             </properties>
         </profile>
         <profile>
@@ -240,6 +260,16 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-yaml-provider</artifactId>
             <version>${jackson-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -257,23 +287,71 @@
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2</artifactId>
             <version>${swagger-core-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.validation</groupId>
+                    <artifactId>jakarta.validation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- inflector library -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-inflector</artifactId>
             <version>${swagger-inflector-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>com.github.fge</groupId>-->
+<!--                    <artifactId>jackson-coreutils</artifactId>-->
+<!--                </exclusion>-->
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.swagger.parser.v3</groupId>
             <artifactId>swagger-parser</artifactId>
             <version>${swagger-parser-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.java-json-tools</groupId>
+                    <artifactId>msg-simple</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.java-json-tools</groupId>
+                    <artifactId>jackson-coreutils</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>net.serenity-bdd</groupId>
             <artifactId>serenity-core</artifactId>
             <version>${serenity.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>javax.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>

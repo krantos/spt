@@ -1,5 +1,4 @@
-# Swagger Petstore Sample
-
+# Petstore Testing
 
 ### Requirements to run the project
 
@@ -39,16 +38,39 @@ docker run  --name swaggerapi-petstore3 -d -p 8080:8080 swaggerapi/petstore3:uns
 
 ### Running Tests
 
-- Use Profile `dev` To run tests using local server
+In a new terminal run:
 
-    Open a new terminal and run
+- Profile `dev` To run tests using local server
 
     ```shell
-    mvn clean verify -Pdev
+    mvn verify -Pdev
     ```
 
-- Use Profile `prod` to run tests using prd version
+- Profile `prod` to run tests using prd version
 
   ```shell
-  mvn clean verify -Pprod
+  mvn verify -Pprod
   ```
+  
+## Tests Design
+
+To test `pets/findByTag` endpoint I have decided to run functional tests to cover major cases.
+In the table below you will find each covered case. 
+The objective is to consider every possible case for the specified endpoint. And with the same 
+mindset, we can cover each endpoint.
+
+| Endpoint  | Test |
+|-----------|------|
+| `pet/fetchById` | 
+
+
+## Extras
+To smoothly run the tests I worked in the following extra things:
+
+1. Added missing dependencies to make work put and post actions locally
+
+1. Removed duplicated dependency jars that generated Warnings on Jetty start
+
+1. Added Prettier to format code
+
+1. Added `dev` and `prod` variables to maven profile

@@ -1,5 +1,6 @@
 package petstore.userStories;
 
+import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import petstore.Base;
 import petstore.userStories.actions.PetApiActions;
 
+import java.math.BigInteger;
+
 @ExtendWith(SerenityJUnit5Extension.class)
+@WithTag("Acceptance Test")
 public class WhenAUserAddsANewPetTest extends Base {
 
   @BeforeEach
@@ -16,7 +20,7 @@ public class WhenAUserAddsANewPetTest extends Base {
   }
 
   Long newPetId = null;
-  Long sessionId = null;
+  BigInteger sessionId = null;
   PetApiActions petApi;
 
   @Test
