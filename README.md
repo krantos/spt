@@ -13,6 +13,10 @@
   * [Second task: API performance test](#second-task-api-performance-test)
     * [Tests](#tests)
       * [Design considerations](#design-considerations)
+      * [Average-load test](#average-load-test)
+      * [From the Report:](#from-the-report)
+      * [What to do if tests are failing](#what-to-do-if-test-are-failing)
+    * [Run k6 tests](#run-k6-tests)
 <!-- TOC -->
 
 ### Tools used
@@ -109,7 +113,12 @@ can visit the site and search for pets and buy them.
     - Most requested pages or endpoints
     - Amount of request per minute or RPM.
     - User's geolocation (this will impact time response)
-    - Monitor and loging system plugged to Petstore server, to collect server resource consumption
+    - Monitor and logging system plugged to Petstore server, to collect server resource consumption and debug bottlenecks
+    - Have a Production-like server where to execute tests (try to not use prod server unless you want to mess up with
+      analytics)
+    - If you are using a third party server, look for request limitations. Maybe they have a DDoS security blocker.
+    - Remember to shut servers down once you have finished (they cost money)
+    - Try to set a server near your real clients
 
 With the previous information we can focus the performance efforts in areas with either bottlenecks or most visited.
 Additionally, we can define a base-line to compare future code change in the Petsotre system.
@@ -118,22 +127,26 @@ In the case of the system is not being released yet, we can define the base-line
 time.
 i.e: If any endpoint takes more than 3 seconds to respond we check it as a failure in the test.
 
-To narrow this exercise I'll focus on one endpoint, that I consider, it will receive most of the requests. `findByTags`. 
-Why? First, because is the entry point to sell a pet, which makes it critical for the business. The client will purchase the 
+To narrow this exercise I'll focus on one endpoint, that I consider, it will receive most of the requests. `findByTags`.
+Why? First, because is the entry point to sell a pet, which makes it critical for the business. The client will purchase
+the
 product if first can find it. And second, it requires to traverse the Pets table, which
 depending on how it was implemented, it can be an expensive process.
 
 ### Tests
 
 #### Design considerations
-  - Exit criteria: the 90th percentile response time should be below 300 ms.
+
+- Exit criteria: the 90th percentile response time should be below 300 ms.
+
   ```javscript
 		http_req_duration: [{
-			threshold: 'p(99)<300',
+			threshold: 'p(90)<300',
 			abortOnFail: true
 		}]
   ```
-  - Type of tests:
+
+- Type of tests:
     - Average-load testing: how the system performs under typical load.
     - Stress testing: how the system performs when loads are heavier than usual.
 
@@ -141,3 +154,29 @@ depending on how it was implemented, it can be an expensive process.
 
 The goal of an average-load test is to simulate the average amount of activity on a typical day in production.
 
+k6 report:
+
+![k6 report](./src/test/resources/images/averageloadtest.png)
+
+#### From the Report:
+
+- All requests were successful
+- P90th is below the maximum threshold
+- From the 72.83 req/s
+    - To RPM: * 60 s/min = 4370 req/min
+- If we consider that a user can easily do 2 calls per minute while searching for a pet, we can say that this endpoint
+  can handle at least 2186 users per minute.
+  Ideally we could compare it against real data and evaluate such assumption. (Google Analytics is a good resource for
+  real data)
+
+#### What to do if test are failing
+
+1. Go to the development team and present the evidence
+2. After code changes and run tests again (at least 5 times and do the avg of each result)
+3. Keep repeating step 2 until you are happy with the results.
+
+### Run k6 tests
+
+```shell
+k6 run -e URL=https://petstore3.swagger.io src/test/k6/scripts/FetchPetsAverageTesting.js
+```
