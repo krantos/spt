@@ -1,8 +1,14 @@
 # Petstore Testing
 
+### Tools used
+
+- Serenity
+- Rest Assured
+- Maven (because the original petstore project uses maven)
+
 ### Requirements to run the project
 
-Have installed:
+Have installed in your machine:
 
 - Java > v17
 - Maven
@@ -26,6 +32,10 @@ In a new terminal run:
   ```shell
   mvn verify -Pprod
   ```
+  
+## Test Report
+
+Open the Serenity report [here](./spt/target/site/serenity/index.html)
 
 ## Tests Design
 
@@ -59,7 +69,7 @@ When I ask for a pet with Sun's id
 Then I get Sun data as result
 ```
 
-## Extras
+## Extras and faced challenges
 
 To smoothly run the tests I worked in the following extra things:
 
