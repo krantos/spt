@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.*;
 
 import static net.serenitybdd.rest.SerenityRest.*;
 
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Random;
 
@@ -21,7 +22,7 @@ import static io.swagger.petstore.data.PetData.createPet;
 public class PetApiActions extends UIInteractions {
 
   @Given("I am authenticated")
-  public Long givenIamAuthenticated(String userName, String password) {
+  public BigInteger givenIamAuthenticated(String userName, String password) {
     String response = given()
       .basePath(Paths.Login)
       .queryParam("username", userName)
@@ -29,14 +30,14 @@ public class PetApiActions extends UIInteractions {
       .accept(ContentType.XML)
       .get()
       .getBody()
-      .toString();
+      .asString();
 
-     String idStr = response.replaceAll("\\D", "");
-     return Long.parseLong(idStr);
+     String idStr = response.replaceAll("[^0-9]", "");
+     return new BigInteger(idStr);
   }
 
   @Given("I add my new pet Sun")
-  public Long givenIAddMyNewPetSun(Long sessionId) {
+  public Long givenIAddMyNewPetSun(BigInteger sessionId) {
     Pet pet = createPet(
       new Random().nextLong(),
       new Category(),
