@@ -3,40 +3,15 @@
 ### Requirements to run the project
 
 Have installed:
- 
+
 - Java > v17
 - Maven
 
 **Recommendation**: Use [SDKMan!](https://sdkman.io) to install Java and Maven
 
-### To run Server
-Open a new terminal
-To run the server, run this task:
+### To run tests
 
-```
-mvn package jetty:run
-```
-
-This will start Jetty embedded on port 8080.
-
-### To run (via Docker)
-
-Expose port 8080 from the image and access petstore via the exposed port. You can then add and delete pets as you see fit.
-
-
-*Example*:
-
-```
-docker build -t swaggerapi/petstore3:unstable .
-```
-
-```
-docker pull swaggerapi/petstore3:unstable
-docker run  --name swaggerapi-petstore3 -d -p 8080:8080 swaggerapi/petstore3:unstable
-```
-
-
-### Running Tests
+Integration tests includes `pre-integration-test` to start `jetty` server and `post-integration-test` to stop it.
 
 In a new terminal run:
 
@@ -51,20 +26,41 @@ In a new terminal run:
   ```shell
   mvn verify -Pprod
   ```
-  
+
 ## Tests Design
 
 To test `pets/findByTag` endpoint I have decided to run functional tests to cover major cases.
-In the table below you will find each covered case. 
-The objective is to consider every possible case for the specified endpoint. And with the same 
+In the table below you will find each covered case.
+The objective is to consider every possible case for the specified endpoint. And with the same
 mindset, we can cover each endpoint.
 
-| Endpoint  | Test |
-|-----------|------|
-| `pet/fetchById` | 
+| Endpoint        | Tests                                                                                  |
+|-----------------|----------------------------------------------------------------------------------------|
+| `pet/fetchById` | Validate that fetching pets with `tag` should return pets that include the same `tag`. |
+|                 | Validate that pets include at least one tag on a multiple tag request                  |
+|                 | Validate empty collection response for an unknown tag                                  |
+|                 | Validate error message for empty tag                                                   |
+|                 | Validate JSON Schema response                                                          |
 
+## Acceptance Test
+
+Given a specific user flow a test is created to validate a common scenario.
+This user flow will include the next endpoints
+
+- `/user/login` with a `get` action that includes auth data
+- `/pet` with `post` action to create a new pet (includes sessionId from previous call)
+- `/pet` with `get` action to retrieve information
+- body validation agains prior data.
+
+```gherkin
+Given I am authenticated
+And I add my new pet Sun
+When I ask for a pet with Sun's id
+Then I get Sun data as result
+```
 
 ## Extras
+
 To smoothly run the tests I worked in the following extra things:
 
 1. Added missing dependencies to make work put and post actions locally
