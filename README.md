@@ -36,13 +36,18 @@ Have installed in your machine:
 
 **Recommendation**: Use [SDKMan!](https://sdkman.io) to install Java and Maven
 
+Clone the project with:
+```shell
+  git clone git@github.com:krantos/spt.git
+```
+
 ## First task: API test automation
 
 ### To run API tests
 
 Integration tests includes `pre-integration-test` to start `jetty` server and `post-integration-test` to stop it.
 
-In a new terminal run:
+In a new terminal in the root path of the project and run:
 
 - Profile `dev` To run tests using local server
 
@@ -56,9 +61,11 @@ In a new terminal run:
   mvn verify -Pprod
   ```
 
-### Test Report
+- Open the report by opening the file 
 
-Open the Serenity report [here](./spt/target/site/serenity/index.html)
+  ```shell
+  /spt/target/site/serenity/index.html
+  ```
 
 ### Tests Design
 
@@ -176,6 +183,8 @@ k6 report:
 3. Keep repeating step 2 until you are happy with the results.
 
 ### Run k6 tests
+
+Open a new terminal in the root path of the project and execute:
 
 ```shell
 k6 run -e URL=https://petstore3.swagger.io src/test/k6/scripts/FetchPetsAverageTesting.js
