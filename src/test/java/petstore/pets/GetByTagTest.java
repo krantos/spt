@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.*;
 
 import io.restassured.http.ContentType;
 import net.serenitybdd.annotations.Description;
+import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,8 @@ import petstore.Paths;
 import java.util.Arrays;
 
 @ExtendWith(SerenityJUnit5Extension.class)
+@WithTag("functional-test")
 public class GetByTagTest extends Base {
-
   @BeforeEach
   public void setup() {
     super.setup();
