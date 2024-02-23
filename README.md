@@ -30,11 +30,29 @@
 
 Have installed in your machine:
 
-- Java > v17
+- Java > v21
 - Maven
 - [k6](https://grafana.com/docs/k6/latest/get-started/installation/)
 
 **Recommendation**: Use [SDKMan!](https://sdkman.io) to install Java and Maven
+
+Installations with SDKMan
+
+```shell
+  sdk install java 21.0.2-open
+```
+
+Select Java
+
+```shell
+  sdk use java 21.0.2-open
+```
+
+Install Maven
+
+```shell
+  sdk install maven 
+```
 
 Clone the project with:
 ```shell
